@@ -10,7 +10,6 @@ const productUrlSuffix = '.html';
 
 class SuggestedProduct extends Component {
     static propTypes = {
-        handleOnProductOpen: func.isRequired,
         url_key: string.isRequired,
         small_image: string.isRequired,
         name: string.isRequired,
@@ -24,14 +23,14 @@ class SuggestedProduct extends Component {
         }).isRequired,
         classes: shape({
             root: string,
-            productName: string,
-            productImage: string
+            image: string,
+            name: string,
+            price: string
         })
     };
 
     render() {
         const {
-            handleOnProductOpen,
             classes,
             url_key,
             small_image,
@@ -39,34 +38,28 @@ class SuggestedProduct extends Component {
             price
         } = this.props;
 
-        const productLink = resourceUrl(`/${url_key}${productUrlSuffix}`);
+        const uri = resourceUrl(`/${url_key}${productUrlSuffix}`);
 
         return (
-            <li className={classes.root}>
-                <Link onClick={handleOnProductOpen} to={productLink}>
-                    <img
-                        className={classes.productImage}
-                        alt={name}
-                        src={resourceUrl(small_image, {
-                            type: 'image-product',
-                            width: 60
-                        })}
-                    />
-                </Link>
-                <Link
-                    onClick={handleOnProductOpen}
-                    className={classes.productName}
-                    to={productLink}
-                >
+            <Link className={classes.root} to={uri}>
+                <img
+                    className={classes.image}
+                    alt={name}
+                    src={resourceUrl(small_image, {
+                        type: 'image-product',
+                        width: 60
+                    })}
+                />
+                <span className={classes.name}>
                     {name}
-                </Link>
-                <Link onClick={handleOnProductOpen} to={productLink}>
+                </span>
+                <span className={classes.price}>
                     <Price
                         currencyCode={price.regularPrice.amount.currency}
                         value={price.regularPrice.amount.value}
                     />
-                </Link>
-            </li>
+                </span>
+            </Link>
         );
     }
 }

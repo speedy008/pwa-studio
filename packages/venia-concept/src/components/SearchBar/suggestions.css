@@ -1,0 +1,28 @@
+.categories {
+    border-top: 1px solid rgb(var(--venia-border));
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+}
+
+.categories:empty {
+    display: none;
+}
+
+.heading {
+    color: rgb(var(--venia-text-alt));
+    font-size: 0.875rem;
+    padding-top: 0.75rem;
+    text-transform: uppercase;
+}
+
+.products {
+    border-top: 1px solid rgb(var(--venia-border));
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+}
+
+.products:empty {
+    display: none;
+}
