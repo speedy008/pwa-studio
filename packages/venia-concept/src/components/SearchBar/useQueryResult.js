@@ -36,9 +36,9 @@ const reducer = (state, { payload, type }) => {
 }
 
 const useQueryResult = () => {
-    const [{ data, error, loading }, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useReducer(reducer, initialState)
 
-    return { data, dispatch, error, loading }
+    return { ...state, dispatch }
 }
 
 export default useQueryResult
