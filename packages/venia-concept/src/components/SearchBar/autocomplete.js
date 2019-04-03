@@ -13,7 +13,7 @@ const debounceTimeout = 200
 
 const Autocomplete = props => {
     const { visible } = props
-    const { data, error, loading, setData, setError, setLoading } = useQueryResult()
+    const { data, dispatch, error, loading } = useQueryResult()
 
     const client = useContext(ApolloContext)
     const { value } = useFieldState("search_query")
@@ -39,22 +39,26 @@ const Autocomplete = props => {
                     query: PRODUCT_SEARCH,
                     variables: { inputText },
                 })
-                .then(({ data, error }) => {
-                    setData(data)
-                    setError(!!error)
-                    setLoading(false)
+                .then(payload => {
+                    dispatch({
+                        payload,
+                        type: "receive response"
+                    })
                 })
         }, debounceTimeout),
-        [setData, setLoading]
+        []
     )
 
     useEffect(() => {
         if (visible && valid) {
-            setLoading(true)
+            dispatch({
+                payload: true,
+                type: "set loading"
+            })
+
             runQuery(value)
         } else if (!value) {
-            setData(null)
-            setLoading(false)
+            dispatch({ type: "reset state" })
         }
 
         return () => {
