@@ -42,14 +42,15 @@ class SuggestedProduct extends Component {
 
         return (
             <Link className={classes.root} to={uri}>
-                <img
-                    className={classes.image}
-                    alt={name}
-                    src={resourceUrl(small_image, {
-                        type: 'image-product',
-                        width: 60
-                    })}
-                />
+                <span className={classes.image}>
+                    <img
+                        alt={name}
+                        src={resourceUrl(small_image, {
+                            type: 'image-product',
+                            width: 60
+                        })}
+                    />
+                </span>
                 <span className={classes.name}>
                     {name}
                 </span>
