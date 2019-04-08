@@ -2,9 +2,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'test';
 }
-const validEnv = require('./validate-environment')(process.env);
 const {
-    Utilities: { addImgOptMiddleware }
+    Utilities: { addImgOptMiddleware, configureEnvironment }
 } = require('@magento/pwa-buildpack');
 const {
     bestPractices,
@@ -13,29 +12,31 @@ const {
 } = require('@magento/upward-js');
 
 async function serve() {
+    const projectEnv = await configureEnvironment(process.env, __dirname);
+
     const config = Object.assign(
         {
             bindLocal: true,
             logUrl: true
         },
-        envToConfig(validEnv),
+        envToConfig(projectEnv),
         {
-            env: validEnv,
+            env: projectEnv,
             before: app => {
-                addImgOptMiddleware(app, validEnv);
+                addImgOptMiddleware(app, projectEnv);
                 app.use(bestPractices());
             }
         }
     );
 
-    if (validEnv.isProduction) {
-        if (process.env.PORT) {
+    if (projectEnv.isProduction) {
+        if (projectEnv.PORT) {
             console.log(
                 `NODE_ENV=production and PORT set. Binding to localhost:${
-                    process.env.PORT
+                    projectEnv.PORT
                 }`
             );
-            config.port = process.env.PORT;
+            config.port = projectEnv.PORT;
         } else {
             console.log(
                 `NODE_ENV=production and no PORT set. Binding to localhost with random port`
@@ -54,11 +55,10 @@ async function serve() {
             } = require('@magento/pwa-buildpack');
             const { hostname, ports, ssl } = await configureHost({
                 interactive: false,
-                subdomain: validEnv.MAGENTO_BUILDPACK_SECURE_HOST_SUBDOMAIN,
-                exactDomain:
-                    validEnv.MAGENTO_BUILDPACK_SECURE_HOST_EXACT_DOMAIN,
+                subdomain: projectEnv.DEV_SERVER_CUSTOM_ORIGIN_SUBDOMAIN,
+                exactDomain: projectEnv.DEV_SERVER_CUSTOM_ORIGIN_EXACT_DOMAIN,
                 addUniqueHash:
-                    validEnv.MAGENTO_BUILDPACK_SECURE_HOST_ADD_UNIQUE_HASH
+                    projectEnv.DEV_SERVER_CUSTOM_ORIGIN_ADD_UNIQUE_HASH
             });
             config.host = hostname;
             config.https = ssl;
