@@ -8,13 +8,8 @@
 
 .image {
     align-items: center;
-    border: 1px solid rgb(var(--venia-border));
-    border-radius: 50%;
     display: inline-flex;
-    height: 60px;
     justify-content: center;
-    overflow: hidden;
-    width: 60px;
 }
 
 .name {

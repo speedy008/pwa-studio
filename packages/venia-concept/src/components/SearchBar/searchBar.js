@@ -21,7 +21,7 @@ const SearchBar = props => {
         value => {
             setExpanded(!!value)
         },
-        [setExpanded]
+        []
     )
 
     // expand on focus
@@ -29,7 +29,7 @@ const SearchBar = props => {
         () => {
             setExpanded(true)
         },
-        [setExpanded]
+        []
     )
 
     // navigate on submit

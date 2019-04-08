@@ -1,228 +1,116 @@
-import React from 'react';
-import TestRenderer from 'react-test-renderer';
+import React from "react"
+import { Form } from "informed"
+import TestRenderer, { act } from "react-test-renderer"
 
-import { Form } from 'informed';
-import TextInput from 'src/components/TextInput';
-import SearchBar from '../searchBar';
-import SearchAutocomplete from '../autocomplete';
+import Autocomplete from "../autocomplete"
+import SearchBar from "../searchBar"
+import SearchField from "../searchField"
 
-const removeEventListenerMock = jest.fn();
-Object.defineProperty(window.document, 'removeEventListener', {
-    writable: true,
-    configurable: true
-});
-window.document.removeEventListener = removeEventListenerMock;
+jest.mock("src/classify")
+jest.mock("../autocomplete", () => () => null)
+jest.mock("../searchField", () => () => null)
 
-const buttonTypes = el => el.type === 'button';
-const inputTypes = el => el.type === 'input';
+const mockHistory = {
+    push: jest.fn()
+}
 
-const executeSearchMock = jest.fn();
-const props = {
-    executeSearch: executeSearchMock,
-    history: {},
-    location: { search: '?query=test' },
-    isOpen: true
-};
+const createTestInstance = (...args) => {
+    let instance
 
-afterEach(() => {
-    executeSearchMock.mockReset();
-});
+    act(() => {
+        instance = TestRenderer.create(...args)
+    })
 
-afterAll(() => {
-    afterAll(() => window.document.removeEventListener.mockRestore());
-});
+    return instance
+}
 
-test('renders the correct tree', () => {
-    const tree = TestRenderer.create(<SearchBar {...props} />).toJSON();
+test("renders correctly", () => {
+    const { root } = createTestInstance(
+        <SearchBar
+            history={{}}
+            isOpen={false}
+            location={{}}
+        />
+    )
 
-    expect(tree).toMatchSnapshot();
-});
+    expect(root.findByProps({ className: "root" })).toBeTruthy()
+    expect(root.findByProps({ className: "container" })).toBeTruthy()
+    expect(root.findByProps({ className: "form" })).toBeTruthy()
+    expect(root.findByProps({ className: "search" })).toBeTruthy()
+    expect(root.findByProps({ className: "autocomplete" })).toBeTruthy()
+})
 
-test('renders the correct tree', () => {
-    const newProps = {
-        ...props,
-        isOpen: false
-    };
-    const tree = TestRenderer.create(<SearchBar {...newProps} />).toJSON();
+test("sets different classnames when open", () => {
+    const { root } = createTestInstance(
+        <SearchBar
+            history={{}}
+            isOpen={true}
+            location={{}}
+        />
+    )
 
-    expect(tree).toMatchSnapshot();
-});
+    expect(root.findAllByProps({ className: "root" })).toHaveLength(0)
+    expect(root.findByProps({ className: "root_open" })).toBeTruthy()
+})
 
-test('the input field is seeded from the location', () => {
-    const expected = 'test';
+test("expands or collapses on change, depending on the value", () => {
+    const { root } = createTestInstance(
+        <SearchBar
+            history={{}}
+            isOpen={false}
+            location={{}}
+        />
+    )
 
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
+    expect(root.findByType(Autocomplete).props.visible).toBe(false)
 
-    const input = instance.find(inputTypes);
+    act(() => {
+        root.findByType(SearchField).props.onChange("foo")
+    })
 
-    expect(input.props.value).toBe(expected);
-});
+    expect(root.findByType(Autocomplete).props.visible).toBe(true)
 
-test('the reset button is visible when the input field is not empty', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
+    act(() => {
+        root.findByType(SearchField).props.onChange("")
+    })
 
-    const buttons = instance.findAll(buttonTypes);
+    expect(root.findByType(Autocomplete).props.visible).toBe(false)
+})
 
-    expect(buttons).toHaveLength(1);
-});
+test("expands on focus", () => {
+    const { root } = createTestInstance(
+        <SearchBar
+            history={{}}
+            isOpen={false}
+            location={{}}
+        />
+    )
 
-test('the reset button is not visible when the input field is empty', () => {
-    // Force the input field to be empty.
-    const testProps = {
-        ...props,
-        location: { search: '' }
-    };
+    expect(root.findByType(Autocomplete).props.visible).toBe(false)
 
-    const renderer = TestRenderer.create(<SearchBar {...testProps} />);
-    const instance = renderer.root;
+    act(() => {
+        root.findByType(SearchField).props.onFocus()
+    })
 
-    const buttons = instance.findAll(buttonTypes);
+    expect(root.findByType(Autocomplete).props.visible).toBe(true)
+})
 
-    expect(buttons).toHaveLength(0);
-});
+test("navigates on submit", () => {
+    const { root } = createTestInstance(
+        <SearchBar
+            history={mockHistory}
+            isOpen={false}
+            location={{}}
+        />
+    )
 
-test('entering text in the input causes the reset button to appear', () => {
-    // Start with an empty input field.
-    const testProps = {
-        ...props,
-        location: { search: '' }
-    };
+    const inputString = "foo"
 
-    const renderer = TestRenderer.create(<SearchBar {...testProps} />);
-    const instance = renderer.root;
+    act(() => {
+        root.findByType(Form).props.onSubmit({
+            search_query: inputString
+        })
+    })
 
-    // Confirm that the button is not present.
-    const preChangeButtons = instance.findAll(buttonTypes);
-    expect(preChangeButtons).toHaveLength(0);
-
-    // Simulate entering text in the input field.
-    const input = instance.find(inputTypes);
-    input.props.onChange({
-        target: { value: 'some text' }
-    });
-
-    // Test that the button appears.
-    const postChangeButtons = instance.findAll(buttonTypes);
-    expect(postChangeButtons).toHaveLength(1);
-});
-
-test('the reset button clears the input', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
-
-    // Test that there is some text in the input to start.
-    const input = instance.find(inputTypes);
-    expect(input.props.value).toBe('test');
-
-    // Simulate clicking the reset button.
-    const button = instance.find(buttonTypes);
-    button.props.onClick();
-
-    // Test that the input has been cleared and autocomplete is closed.
-    expect(input.props.value).toBe('');
-    expect(
-        instance.findByType(SearchAutocomplete).props.autocompleteVisible
-    ).toBe(false);
-});
-
-test('submitting the form executes the search', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
-
-    // Simulate form submit.
-    const form = instance.findByType(Form);
-
-    form.props.onSubmit({});
-    expect(executeSearchMock).not.toHaveBeenCalled();
-
-    form.props.onSubmit({
-        search_query: 'test'
-    });
-
-    // Test that executeSearch was called.
-    expect(executeSearchMock).toHaveBeenCalledTimes(1);
-    expect(executeSearchMock).toHaveBeenNthCalledWith(1, 'test', props.history);
-});
-
-test('focusing on the text input sets state.autocompleteVisible true', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
-    const setStateMock = jest.fn();
-    instance.children[0].instance.setState = setStateMock;
-
-    const input = instance.findByType(TextInput);
-    input.props.onFocus();
-
-    expect(setStateMock).toHaveBeenCalled();
-    expect(setStateMock).toHaveBeenCalledWith({
-        autocompleteVisible: true
-    });
-});
-
-test('handles clicks inside and out of autocomplete input', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
-    const setStateMock = jest.fn();
-
-    instance.children[0].instance.searchRef.current = {};
-    instance.children[0].instance.autocompleteRef.current = {};
-
-    instance.children[0].instance.setState = setStateMock;
-    instance.children[0].instance.searchRef.current.contains = jest
-        .fn()
-        .mockReturnValue(true);
-    instance.children[0].instance.autocompleteRef.current.contains = jest
-        .fn()
-        .mockReturnValue(false);
-
-    instance.children[0].instance.autocompleteClick({
-        target: ''
-    });
-
-    expect(setStateMock).not.toHaveBeenCalled();
-
-    instance.children[0].instance.searchRef.current.contains = jest
-        .fn()
-        .mockReturnValue(false);
-    instance.children[0].instance.autocompleteRef.current.contains = jest
-        .fn()
-        .mockReturnValue(true);
-
-    instance.children[0].instance.autocompleteClick({
-        target: ''
-    });
-
-    expect(setStateMock).not.toHaveBeenCalled();
-
-    instance.children[0].instance.searchRef.current.contains = jest
-        .fn()
-        .mockReturnValue(false);
-    instance.children[0].instance.autocompleteRef.current.contains = jest
-        .fn()
-        .mockReturnValue(false);
-
-    instance.children[0].instance.autocompleteClick({
-        target: ''
-    });
-
-    expect(setStateMock).toHaveBeenCalledWith({
-        autocompleteVisible: false
-    });
-});
-
-test('removes mousedown event listener', () => {
-    const renderer = TestRenderer.create(<SearchBar {...props} />);
-    const instance = renderer.root;
-
-    instance.children[0].instance.autocompleteClick = jest.fn();
-
-    instance.children[0].instance.componentWillUnmount();
-
-    expect(removeEventListenerMock).toHaveBeenCalledWith(
-        'mousedown',
-        instance.children[0].instance.autocompleteClick,
-        false
-    );
-});
+    expect(mockHistory.push).toHaveBeenLastCalledWith(`/search.html?query=${inputString}`)
+})

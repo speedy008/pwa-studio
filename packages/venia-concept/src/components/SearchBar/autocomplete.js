@@ -30,6 +30,8 @@ const Autocomplete = props => {
         message = "Search for a product"
     } else if (!data.products.items.length) {
         message = "No results were found."
+    } else {
+        message = `${data.products.items.length} items`
     }
 
     const runQuery = useCallback(
@@ -69,7 +71,7 @@ const Autocomplete = props => {
     return (
         <div className={rootClassName}>
             <div className={classes.message}>
-                {message || `${data.products.items.length} items`}
+                {message}
             </div>
             <div className={classes.suggestions}>
                 <Suggestions
