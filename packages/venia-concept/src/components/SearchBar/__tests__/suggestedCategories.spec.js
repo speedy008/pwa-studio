@@ -2,7 +2,7 @@ import React from "react"
 
 import { Link } from "src/drivers"
 import createTestInstance from "src/util/createTestInstance"
-import SuggestedCategoryList from "../suggestedCategoryList"
+import SuggestedCategories from "../suggestedCategories"
 
 jest.mock("src/drivers", () => ({
     Link: jest.fn(() => null)
@@ -18,7 +18,7 @@ const categories = [
 
 test("renders correctly", () => {
     const instance = createTestInstance(
-        <SuggestedCategoryList categories={categories} value="foo" />
+        <SuggestedCategories categories={categories} value="foo" />
     )
 
     expect(instance.toJSON()).toMatchSnapshot()
@@ -26,7 +26,7 @@ test("renders correctly", () => {
 
 test("renders a max of 4 categories by default", () => {
     const { root } = createTestInstance(
-        <SuggestedCategoryList categories={categories} value="foo" />
+        <SuggestedCategories categories={categories} value="foo" />
     )
 
     expect(root.findAllByType(Link)).toHaveLength(4)
@@ -34,7 +34,7 @@ test("renders a max of 4 categories by default", () => {
 
 test("allows the render limit to be configured", () => {
     const { root } = createTestInstance(
-        <SuggestedCategoryList categories={categories} limit={2} value="foo" />
+        <SuggestedCategories categories={categories} limit={2} value="foo" />
     )
 
     expect(root.findAllByType(Link)).toHaveLength(2)

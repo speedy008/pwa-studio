@@ -3,9 +3,9 @@ import React from "react"
 import { mergeClasses } from "src/classify"
 import mapProduct from "./mapProduct"
 import SuggestedProduct from "./suggestedProduct"
-import defaultClasses from "./suggestedProductList.css"
+import defaultClasses from "./suggestedProducts.css"
 
-const SuggestedProductList = props => {
+const SuggestedProducts = props => {
     const { limit, products } = props
     const classes = mergeClasses(defaultClasses, props.classes)
     
@@ -24,8 +24,8 @@ const SuggestedProductList = props => {
     )
 }
 
-export default SuggestedProductList
+export default SuggestedProducts
 
-SuggestedProductList.defaultProps = {
+SuggestedProducts.defaultProps = {
     limit: 3
 }

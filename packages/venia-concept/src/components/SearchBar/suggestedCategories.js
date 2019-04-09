@@ -3,9 +3,9 @@ import { Link } from "src/drivers"
 
 import { mergeClasses } from "src/classify"
 import getLocation from "./getLocation"
-import defaultClasses from "./suggestedCategoryList.css"
+import defaultClasses from "./suggestedCategories.css"
 
-const SuggestedCategoryList = props => {
+const SuggestedCategories = props => {
     const { categories, limit, value } = props
     const classes = mergeClasses(defaultClasses, props.classes)
 
@@ -30,8 +30,8 @@ const SuggestedCategoryList = props => {
     )
 }
 
-export default SuggestedCategoryList
+export default SuggestedCategories
 
-SuggestedCategoryList.defaultProps = {
+SuggestedCategories.defaultProps = {
     limit: 4
 }

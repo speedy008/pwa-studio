@@ -1,8 +1,8 @@
 import React, { Fragment } from "react"
 
 import { mergeClasses } from "src/classify"
-import SuggestedCategoryList from "./suggestedCategoryList"
-import SuggestedProductList from "./suggestedProductList"
+import SuggestedCategories from "./suggestedCategories"
+import SuggestedProducts from "./suggestedProducts"
 import defaultClasses from "./suggestions.css"
 
 const Suggestions = props => {
@@ -19,14 +19,14 @@ const Suggestions = props => {
 
     return (
         <Fragment>
-            <SuggestedCategoryList
+            <SuggestedCategories
                 categories={categories}
                 value={searchValue}
             />
             <h2 className={classes.heading}>
                 <span>{"Product Suggestions"}</span>
             </h2>
-            <SuggestedProductList
+            <SuggestedProducts
                 products={items}
             />
         </Fragment>

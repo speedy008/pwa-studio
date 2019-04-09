@@ -3,8 +3,8 @@ import React from "react"
 import createTestInstance from "src/util/createTestInstance"
 import Suggestions from "../suggestions"
 
-jest.mock("../suggestedCategoryList", () => () => null)
-jest.mock("../suggestedProductList", () => () => null)
+jest.mock("../suggestedCategories", () => () => null)
+jest.mock("../suggestedProducts", () => () => null)
 
 const filters = [
     { name: "Color", filter_items: [] },

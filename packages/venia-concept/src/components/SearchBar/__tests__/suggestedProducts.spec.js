@@ -3,7 +3,7 @@ import React from "react"
 import createTestInstance from "src/util/createTestInstance"
 import mapProduct from "../mapProduct"
 import SuggestedProduct from "../suggestedProduct"
-import SuggestedProductList from "../suggestedProductList"
+import SuggestedProducts from "../suggestedProducts"
 
 jest.mock("../mapProduct", () => jest.fn())
 jest.mock("../suggestedProduct", () => () => null)
@@ -19,7 +19,7 @@ test("renders correctly", () => {
     const subset = products.slice(0, 1)
 
     const instance = createTestInstance(
-        <SuggestedProductList products={subset} />
+        <SuggestedProducts products={subset} />
     )
 
     expect(instance.toJSON()).toMatchSnapshot()
@@ -27,7 +27,7 @@ test("renders correctly", () => {
 
 test("renders a max of 3 products by default", () => {
     const { root } = createTestInstance(
-        <SuggestedProductList products={products} />
+        <SuggestedProducts products={products} />
     )
 
     expect(root.findAllByType(SuggestedProduct)).toHaveLength(3)
@@ -35,7 +35,7 @@ test("renders a max of 3 products by default", () => {
 
 test("allows the render limit to be configured", () => {
     const { root } = createTestInstance(
-        <SuggestedProductList limit={2} products={products} />
+        <SuggestedProducts limit={2} products={products} />
     )
 
     expect(root.findAllByType(SuggestedProduct)).toHaveLength(2)
@@ -43,7 +43,7 @@ test("allows the render limit to be configured", () => {
 
 test("calls `mapProduct()` for each item", () => {
     createTestInstance(
-        <SuggestedProductList limit={4} products={products} />
+        <SuggestedProducts limit={4} products={products} />
     )
 
     products.forEach((product, index) => {
