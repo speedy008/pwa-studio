@@ -1,9 +1,10 @@
 import React from "react"
 import { Form, Text } from "informed"
-import TestRenderer, { act } from "react-test-renderer"
+import { act } from "react-test-renderer"
 import { ApolloContext } from "react-apollo/ApolloContext"
 import waitForExpect from "wait-for-expect"
 
+import createTestInstance from "src/util/createTestInstance"
 import Autocomplete from "../autocomplete"
 import Suggestions from "../suggestions"
 import useQueryResult from "../useQueryResult"
@@ -24,16 +25,6 @@ jest.mock("../useQueryResult", () => {
 })
 
 const { dispatch } = useQueryResult()
-
-const createTestInstance = (...args) => {
-    let instance
-
-    act(() => {
-        instance = TestRenderer.create(...args)
-    })
-
-    return instance
-}
 
 test("renders correctly", () => {
     const { root } = createTestInstance(

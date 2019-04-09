@@ -1,7 +1,8 @@
 import React from "react"
 import { Form } from "informed"
-import TestRenderer, { act } from "react-test-renderer"
+import { act } from "react-test-renderer"
 
+import createTestInstance from "src/util/createTestInstance"
 import Autocomplete from "../autocomplete"
 import SearchBar from "../searchBar"
 import SearchField from "../searchField"
@@ -12,16 +13,6 @@ jest.mock("../searchField", () => () => null)
 
 const mockHistory = {
     push: jest.fn()
-}
-
-const createTestInstance = (...args) => {
-    let instance
-
-    act(() => {
-        instance = TestRenderer.create(...args)
-    })
-
-    return instance
 }
 
 test("renders correctly", () => {
