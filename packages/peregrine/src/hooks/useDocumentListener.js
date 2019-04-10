@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default (type, listener, ...rest) => {
+export const useDocumentListener = (type, listener, ...rest) => {
     useEffect(() => {
         document.addEventListener(type, listener, ...rest);
 

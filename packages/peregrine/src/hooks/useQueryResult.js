@@ -35,10 +35,8 @@ const reducer = (state, { payload, type }) => {
     }
 };
 
-const useQueryResult = () => {
+export const useQueryResult = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     return { ...state, dispatch };
 };
-
-export default useQueryResult;

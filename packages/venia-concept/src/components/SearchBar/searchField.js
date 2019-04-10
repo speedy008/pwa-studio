@@ -2,11 +2,11 @@ import React, { useCallback } from 'react';
 import { useFieldState, useFormApi } from 'informed';
 import ClearIcon from 'react-feather/dist/icons/x';
 import SearchIcon from 'react-feather/dist/icons/search';
+import { useValueFromSearchParams } from '@magento/peregrine';
 
 import Icon from 'src/components/Icon';
 import TextInput from 'src/components/TextInput';
 import Trigger from 'src/components/Trigger';
-import useValueFromQuery from './useValueFromQuery';
 
 const clearIcon = <Icon src={ClearIcon} size={18} />;
 const searchIcon = <Icon src={SearchIcon} size={18} />;
@@ -31,7 +31,7 @@ const SearchField = props => {
         [formApi, onChange]
     );
 
-    useValueFromQuery({ location, setValue });
+    useValueFromSearchParams({ location, parameter: 'query', setValue });
 
     const resetForm = useCallback(() => {
         formApi.reset();

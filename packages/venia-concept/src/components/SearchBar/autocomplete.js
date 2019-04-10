@@ -2,11 +2,11 @@ import React, { useCallback, useContext, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 import { useFieldState } from 'informed';
 import { ApolloContext } from 'react-apollo/ApolloContext';
+import { useQueryResult } from '@magento/peregrine';
 
 import { mergeClasses } from 'src/classify';
 import PRODUCT_SEARCH from 'src/queries/productSearch.graphql';
 import Suggestions from './suggestions';
-import useQueryResult from './useQueryResult';
 import defaultClasses from './autocomplete.css';
 
 const debounceTimeout = 200;

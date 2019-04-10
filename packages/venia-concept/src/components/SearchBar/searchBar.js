@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { Form } from 'informed';
+import { useDropdown } from '@magento/peregrine';
 
 import { mergeClasses } from 'src/classify';
 import Autocomplete from './autocomplete';
 import SearchField from './searchField';
-import useDropdown from './useDropdown';
 import defaultClasses from './searchBar.css';
 
 const initialValues = { search_query: '' };

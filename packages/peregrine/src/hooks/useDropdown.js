@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 
-import useDocumentListener from 'src/util/useDocumentListener';
+import { useDocumentListener } from './useDocumentListener';
 
-const useDropdown = () => {
+export const useDropdown = () => {
     const elementRef = useRef(null);
     const [expanded, setExpanded] = useState(false);
 
@@ -13,17 +13,15 @@ const useDropdown = () => {
                 setExpanded(false);
             }
         },
-        [elementRef.current, setExpanded]
+        [elementRef.current]
     );
 
     // add listener to document, as an effect
     useDocumentListener('mousedown', maybeCollapse);
 
     return {
-        expanded,
         elementRef,
+        expanded,
         setExpanded
     };
 };
-
-export default useDropdown;
