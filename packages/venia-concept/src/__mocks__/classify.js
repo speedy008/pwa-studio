@@ -23,4 +23,4 @@ const classify = () => WrappedComponent =>
 
 export default classify;
 
-export const mergeClasses = () => idObj
+export const mergeClasses = () => idObj;

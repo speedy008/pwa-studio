@@ -76,7 +76,7 @@ export default class VeniaAdapter extends Component {
      *
      * They think they're using the new context API, but they're not.
      * https://github.com/apollographql/react-apollo/pull/2540
-     * 
+     *
      * Need ApolloProvider for Query and ApolloConsumer.
      * Need ApolloContext for useContext.
      */

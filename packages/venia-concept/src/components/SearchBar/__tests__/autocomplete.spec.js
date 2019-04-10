@@ -1,165 +1,177 @@
-import React from "react"
-import { Form, Text } from "informed"
-import { act } from "react-test-renderer"
-import { ApolloContext } from "react-apollo/ApolloContext"
-import waitForExpect from "wait-for-expect"
+import React from 'react';
+import { Form, Text } from 'informed';
+import { act } from 'react-test-renderer';
+import { ApolloContext } from 'react-apollo/ApolloContext';
+import waitForExpect from 'wait-for-expect';
 
-import createTestInstance from "src/util/createTestInstance"
-import Autocomplete from "../autocomplete"
-import Suggestions from "../suggestions"
-import useQueryResult from "../useQueryResult"
+import createTestInstance from 'src/util/createTestInstance';
+import Autocomplete from '../autocomplete';
+import useQueryResult from '../useQueryResult';
 
-jest.mock("src/classify")
-jest.mock("../suggestions", () => () => null)
-jest.doMock("react-apollo/ApolloContext", () => React.createContext())
+jest.mock('src/classify');
+jest.mock('../suggestions', () => () => null);
+jest.doMock('react-apollo/ApolloContext', () => React.createContext());
 
-jest.mock("../useQueryResult", () => {
-    const dispatch = jest.fn()
+jest.mock('../useQueryResult', () => {
+    const dispatch = jest.fn();
 
     return jest.fn(() => ({
         data: null,
         dispatch,
         error: null,
-        loading: false,
-    }))
-})
+        loading: false
+    }));
+});
 
-const { dispatch } = useQueryResult()
+const { dispatch } = useQueryResult();
 
-test("renders correctly", () => {
+test('renders correctly', () => {
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={false} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "root_hidden" })).toBeTruthy()
-    expect(root.findByProps({ className: "message" })).toBeTruthy()
-    expect(root.findByProps({ className: "suggestions" })).toBeTruthy()
-})
+    expect(root.findByProps({ className: 'root_hidden' })).toBeTruthy();
+    expect(root.findByProps({ className: 'message' })).toBeTruthy();
+    expect(root.findByProps({ className: 'suggestions' })).toBeTruthy();
+});
 
-test("resets query state if not visible", () => {
+test('resets query state if not visible', () => {
     createTestInstance(
         <Form>
             <Autocomplete visible={false} />
         </Form>
-    )
+    );
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenLastCalledWith({
-        type: "reset state"
-    })
-})
+        type: 'reset state'
+    });
+});
 
-test("resets query state if input is invalid", () => {
+test('resets query state if input is invalid', () => {
     createTestInstance(
-        <Form initialValues={{ search_query: "" }}>
+        <Form initialValues={{ search_query: '' }}>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(dispatch).toHaveBeenCalledTimes(1);
     expect(dispatch).toHaveBeenLastCalledWith({
-        type: "reset state"
-    })
-})
+        type: 'reset state'
+    });
+});
 
-test("sets loading, runs query, receives response", async () => {
-    const query = jest.fn(async () => ({}))
-    let formApi
+test('sets loading, runs query, receives response', async () => {
+    const query = jest.fn(async () => ({}));
+    let formApi;
 
     createTestInstance(
         <ApolloContext.Provider value={{ query }}>
-            <Form getApi={api => { formApi = api }}>
+            <Form
+                getApi={api => {
+                    formApi = api;
+                }}
+            >
                 <Text field="search_query" initialValue="" />
                 <Autocomplete visible={true} />
             </Form>
         </ApolloContext.Provider>
-    )
+    );
 
     act(() => {
-        formApi.setValue("search_query", "a")
-    })
+        formApi.setValue('search_query', 'a');
+    });
     act(() => {
-        formApi.setValue("search_query", "ab")
-    })
+        formApi.setValue('search_query', 'ab');
+    });
     act(() => {
-        formApi.setValue("search_query", "abc")
-    })
+        formApi.setValue('search_query', 'abc');
+    });
 
-    expect(dispatch).toHaveBeenCalledTimes(3)
+    expect(dispatch).toHaveBeenCalledTimes(3);
     expect(dispatch).toHaveBeenNthCalledWith(1, {
-        type: "reset state"
-    })
+        type: 'reset state'
+    });
     expect(dispatch).toHaveBeenNthCalledWith(2, {
-        type: "reset state",
-    })
+        type: 'reset state'
+    });
     expect(dispatch).toHaveBeenNthCalledWith(3, {
         payload: true,
-        type: "set loading",
-    })
+        type: 'set loading'
+    });
 
     await waitForExpect(() => {
-        expect(query).toHaveBeenCalledTimes(1)
-        expect(query).toHaveBeenNthCalledWith(1, expect.objectContaining({
-            variables: {
-                inputText: "abc"
-            }
-        }))
+        expect(query).toHaveBeenCalledTimes(1);
+        expect(query).toHaveBeenNthCalledWith(
+            1,
+            expect.objectContaining({
+                variables: {
+                    inputText: 'abc'
+                }
+            })
+        );
 
-        expect(dispatch).toHaveBeenCalledTimes(4)
+        expect(dispatch).toHaveBeenCalledTimes(4);
         expect(dispatch).toHaveBeenNthCalledWith(4, {
             payload: {},
-            type: "receive response"
-        })
-    })
-})
+            type: 'receive response'
+        });
+    });
+});
 
-test("renders a hint message", () => {
+test('renders a hint message', () => {
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "message" }).children).toContain("Search for a product")
-})
+    expect(root.findByProps({ className: 'message' }).children).toContain(
+        'Search for a product'
+    );
+});
 
-test("renders an error message", () => {
+test('renders an error message', () => {
     useQueryResult.mockReturnValueOnce({
         data: null,
         dispatch,
-        error: new Error("error"),
-        loading: false,
-    })
+        error: new Error('error'),
+        loading: false
+    });
 
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "message" }).children).toContain("An error occurred while fetching results.")
-})
+    expect(root.findByProps({ className: 'message' }).children).toContain(
+        'An error occurred while fetching results.'
+    );
+});
 
-test("renders a loading message", () => {
+test('renders a loading message', () => {
     useQueryResult.mockReturnValueOnce({
         data: null,
         dispatch,
         error: null,
-        loading: true,
-    })
+        loading: true
+    });
 
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "message" }).children).toContain("Fetching results...")
-})
+    expect(root.findByProps({ className: 'message' }).children).toContain(
+        'Fetching results...'
+    );
+});
 
-test("renders an empty-set message", () => {
+test('renders an empty-set message', () => {
     useQueryResult.mockReturnValueOnce({
         data: {
             products: {
@@ -168,19 +180,21 @@ test("renders an empty-set message", () => {
         },
         dispatch,
         error: null,
-        loading: false,
-    })
+        loading: false
+    });
 
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "message" }).children).toContain("No results were found.")
-})
+    expect(root.findByProps({ className: 'message' }).children).toContain(
+        'No results were found.'
+    );
+});
 
-test("renders a summary message", () => {
+test('renders a summary message', () => {
     useQueryResult.mockReturnValueOnce({
         data: {
             products: {
@@ -189,14 +203,16 @@ test("renders a summary message", () => {
         },
         dispatch,
         error: null,
-        loading: false,
-    })
+        loading: false
+    });
 
     const { root } = createTestInstance(
         <Form>
             <Autocomplete visible={true} />
         </Form>
-    )
+    );
 
-    expect(root.findByProps({ className: "message" }).children).toContain("1 items")
-})
+    expect(root.findByProps({ className: 'message' }).children).toContain(
+        '1 items'
+    );
+});

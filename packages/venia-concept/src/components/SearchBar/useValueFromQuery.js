@@ -1,20 +1,17 @@
-import { useEffect } from "react"
+import { useEffect } from 'react';
 
-import getQueryParameterValue from "src/util/getQueryParameterValue"
+import getQueryParameterValue from 'src/util/getQueryParameterValue';
 
 const useValueFromQuery = props => {
-    const { location, setValue } = props
+    const { location, setValue } = props;
     const queryValue = getQueryParameterValue({
         location,
-        queryParameter: "query"
-    })
+        queryParameter: 'query'
+    });
 
-    useEffect(
-        () => {
-            setValue(queryValue)
-        },
-        [setValue, queryValue]
-    )
-}
+    useEffect(() => {
+        setValue(queryValue);
+    }, [setValue, queryValue]);
+};
 
-export default useValueFromQuery
+export default useValueFromQuery;

@@ -1,108 +1,120 @@
-import React from "react"
-import { Form } from "informed"
-import { act } from "react-test-renderer"
+import React from 'react';
+import { Form } from 'informed';
+import { act } from 'react-test-renderer';
 
-import Trigger from "src/components/Trigger"
-import createTestInstance from "src/util/createTestInstance"
-import SearchField from "../searchField"
+import Trigger from 'src/components/Trigger';
+import createTestInstance from 'src/util/createTestInstance';
+import SearchField from '../searchField';
 
-jest.mock("src/classify")
-jest.mock("src/components/Trigger", () => () => null)
+jest.mock('src/classify');
+jest.mock('src/components/Trigger', () => () => null);
 
-const onChange = jest.fn()
-const onFocus = jest.fn()
+const onChange = jest.fn();
+const onFocus = jest.fn();
 
-test("renders correctly", () => {
+test('renders correctly', () => {
     const instance = createTestInstance(
-        <Form initialValues={{ search_query: "" }}>
+        <Form initialValues={{ search_query: '' }}>
             <SearchField
-                location={{ pathname: "/" }}
+                location={{ pathname: '/' }}
                 onChange={onchange}
                 onFocus={onFocus}
             />
         </Form>
-    )
+    );
 
-    expect(instance.toJSON()).toMatchSnapshot()
-})
+    expect(instance.toJSON()).toMatchSnapshot();
+});
 
-test("renders no reset button if value is empty", () => {
+test('renders no reset button if value is empty', () => {
     const { root } = createTestInstance(
-        <Form initialValues={{ search_query: "" }}>
+        <Form initialValues={{ search_query: '' }}>
             <SearchField
-                location={{ pathname: "/" }}
+                location={{ pathname: '/' }}
                 onChange={onChange}
                 onFocus={onFocus}
             />
         </Form>
-    )
+    );
 
-    expect(root.findAllByType(Trigger)).toHaveLength(0)
-})
+    expect(root.findAllByType(Trigger)).toHaveLength(0);
+});
 
-test("renders a reset button", () => {
-    let formApi
+test('renders a reset button', () => {
+    let formApi;
 
     const { root } = createTestInstance(
-        <Form getApi={api => { formApi = api }}>
+        <Form
+            getApi={api => {
+                formApi = api;
+            }}
+        >
             <SearchField
-                location={{ pathname: "/" }}
+                location={{ pathname: '/' }}
                 onChange={onChange}
                 onFocus={onFocus}
             />
         </Form>
-    )
+    );
 
     act(() => {
-        formApi.setValue("search_query", "a")
-    })
+        formApi.setValue('search_query', 'a');
+    });
 
-    expect(root.findAllByType(Trigger)).toHaveLength(1)
-})
+    expect(root.findAllByType(Trigger)).toHaveLength(1);
+});
 
-test("reset button resets the form", () => {
-    let formApi
+test('reset button resets the form', () => {
+    let formApi;
 
     const { root } = createTestInstance(
-        <Form getApi={api => { formApi = api }}>
+        <Form
+            getApi={api => {
+                formApi = api;
+            }}
+        >
             <SearchField
-                location={{ pathname: "/" }}
+                location={{ pathname: '/' }}
                 onChange={onChange}
                 onFocus={onFocus}
             />
         </Form>
-    )
+    );
 
     act(() => {
-        formApi.setValue("search_query", "a")
-    })
+        formApi.setValue('search_query', 'a');
+    });
 
-    const trigger = root.findByType(Trigger)
-    const { action: resetForm } = trigger.props
+    const trigger = root.findByType(Trigger);
+    const { action: resetForm } = trigger.props;
 
     act(() => {
-        resetForm()
-    })
+        resetForm();
+    });
 
-    expect(formApi.getValue("search_query")).toBeUndefined()
-})
+    expect(formApi.getValue('search_query')).toBeUndefined();
+});
 
-test("sets value if location contains one", () => {
-    let formApi
+test('sets value if location contains one', () => {
+    let formApi;
     const location = {
-        pathname: "/search.html",
-        search: "?query=abc",
-    }
+        pathname: '/search.html',
+        search: '?query=abc'
+    };
 
     createTestInstance(
-        <Form getApi={api => { formApi = api }}>
+        <Form
+            getApi={api => {
+                formApi = api;
+            }}
+        >
             <SearchField
                 location={location}
                 onChange={onChange}
                 onFocus={onFocus}
             />
         </Form>
-    )
+    );
 
-    expect(formApi.getValue("search_query")).toBe("abc")
-})
+    expect(formApi.getValue('search_query')).toBe('abc');
+});

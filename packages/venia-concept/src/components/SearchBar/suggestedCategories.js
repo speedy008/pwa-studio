@@ -1,13 +1,13 @@
-import React from "react"
-import { Link } from "src/drivers"
+import React from 'react';
+import { Link } from 'src/drivers';
 
-import { mergeClasses } from "src/classify"
-import getLocation from "./getLocation"
-import defaultClasses from "./suggestedCategories.css"
+import { mergeClasses } from 'src/classify';
+import getLocation from './getLocation';
+import defaultClasses from './suggestedCategories.css';
 
 const SuggestedCategories = props => {
-    const { categories, limit, value } = props
-    const classes = mergeClasses(defaultClasses, props.classes)
+    const { categories, limit, value } = props;
+    const classes = mergeClasses(defaultClasses, props.classes);
 
     const items = categories
         .slice(0, limit)
@@ -21,17 +21,13 @@ const SuggestedCategories = props => {
                     <span>{` in ${label}`}</span>
                 </Link>
             </li>
-        ))
+        ));
 
-    return (
-        <ul className={classes.root}>
-            {items}
-        </ul>
-    )
-}
+    return <ul className={classes.root}>{items}</ul>;
+};
 
-export default SuggestedCategories
+export default SuggestedCategories;
 
 SuggestedCategories.defaultProps = {
     limit: 4
-}
+};

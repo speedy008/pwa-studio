@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func, number, shape, string } from 'prop-types';
+import { number, shape, string } from 'prop-types';
 import { Price } from '@magento/peregrine';
 import classify from 'src/classify';
 import { Link, resourceUrl } from 'src/drivers';
@@ -30,13 +30,7 @@ class SuggestedProduct extends Component {
     };
 
     render() {
-        const {
-            classes,
-            url_key,
-            small_image,
-            name,
-            price
-        } = this.props;
+        const { classes, url_key, small_image, name, price } = this.props;
 
         const uri = resourceUrl(`/${url_key}${productUrlSuffix}`);
 
@@ -51,9 +45,7 @@ class SuggestedProduct extends Component {
                         })}
                     />
                 </span>
-                <span className={classes.name}>
-                    {name}
-                </span>
+                <span className={classes.name}>{name}</span>
                 <span className={classes.price}>
                     <Price
                         currencyCode={price.regularPrice.amount.currency}

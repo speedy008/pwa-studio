@@ -1,37 +1,37 @@
-import React, { useCallback, useContext, useEffect } from "react"
-import debounce from "lodash.debounce"
-import { useFieldState } from "informed"
-import { ApolloContext } from "react-apollo/ApolloContext"
+import React, { useCallback, useContext, useEffect } from 'react';
+import debounce from 'lodash.debounce';
+import { useFieldState } from 'informed';
+import { ApolloContext } from 'react-apollo/ApolloContext';
 
-import { mergeClasses } from "src/classify"
-import PRODUCT_SEARCH from "src/queries/productSearch.graphql"
-import Suggestions from "./suggestions"
-import useQueryResult from "./useQueryResult"
-import defaultClasses from "./autocomplete.css"
+import { mergeClasses } from 'src/classify';
+import PRODUCT_SEARCH from 'src/queries/productSearch.graphql';
+import Suggestions from './suggestions';
+import useQueryResult from './useQueryResult';
+import defaultClasses from './autocomplete.css';
 
-const debounceTimeout = 200
+const debounceTimeout = 200;
 
 const Autocomplete = props => {
-    const { visible } = props
-    const { data, dispatch, error, loading } = useQueryResult()
+    const { visible } = props;
+    const { data, dispatch, error, loading } = useQueryResult();
 
-    const client = useContext(ApolloContext)
-    const { value } = useFieldState("search_query")
-    const classes = mergeClasses(defaultClasses, props.classes)
-    const rootClassName = visible ? classes.root_visible : classes.root_hidden
-    const valid = value && value.length > 2
-    let message = ""
+    const client = useContext(ApolloContext);
+    const { value } = useFieldState('search_query');
+    const classes = mergeClasses(defaultClasses, props.classes);
+    const rootClassName = visible ? classes.root_visible : classes.root_hidden;
+    const valid = value && value.length > 2;
+    let message = '';
 
     if (error) {
-        message = "An error occurred while fetching results."
+        message = 'An error occurred while fetching results.';
     } else if (loading) {
-        message = "Fetching results..."
+        message = 'Fetching results...';
     } else if (!data) {
-        message = "Search for a product"
+        message = 'Search for a product';
     } else if (!data.products.items.length) {
-        message = "No results were found."
+        message = 'No results were found.';
     } else {
-        message = `${data.products.items.length} items`
+        message = `${data.products.items.length} items`;
     }
 
     const runQuery = useCallback(
@@ -39,40 +39,38 @@ const Autocomplete = props => {
             client
                 .query({
                     query: PRODUCT_SEARCH,
-                    variables: { inputText },
+                    variables: { inputText }
                 })
                 .then(payload => {
                     dispatch({
                         payload,
-                        type: "receive response"
-                    })
-                })
+                        type: 'receive response'
+                    });
+                });
         }, debounceTimeout),
         []
-    )
+    );
 
     useEffect(() => {
         if (visible && valid) {
             dispatch({
                 payload: true,
-                type: "set loading"
-            })
+                type: 'set loading'
+            });
 
-            runQuery(value)
+            runQuery(value);
         } else if (!value) {
-            dispatch({ type: "reset state" })
+            dispatch({ type: 'reset state' });
         }
 
         return () => {
-            runQuery.cancel()
-        }
-    }, [valid, value, visible])
+            runQuery.cancel();
+        };
+    }, [valid, value, visible]);
 
     return (
         <div className={rootClassName}>
-            <div className={classes.message}>
-                {message}
-            </div>
+            <div className={classes.message}>{message}</div>
             <div className={classes.suggestions}>
                 <Suggestions
                     products={data ? data.products : {}}
@@ -81,7 +79,7 @@ const Autocomplete = props => {
                 />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Autocomplete
+export default Autocomplete;

@@ -1,48 +1,45 @@
-import React, { useCallback } from "react"
-import { useFieldState, useFormApi } from "informed"
-import ClearIcon from "react-feather/dist/icons/x"
-import SearchIcon from "react-feather/dist/icons/search"
+import React, { useCallback } from 'react';
+import { useFieldState, useFormApi } from 'informed';
+import ClearIcon from 'react-feather/dist/icons/x';
+import SearchIcon from 'react-feather/dist/icons/search';
 
-import Icon from "src/components/Icon"
-import TextInput from "src/components/TextInput"
-import Trigger from "src/components/Trigger"
-import useValueFromQuery from "./useValueFromQuery"
+import Icon from 'src/components/Icon';
+import TextInput from 'src/components/TextInput';
+import Trigger from 'src/components/Trigger';
+import useValueFromQuery from './useValueFromQuery';
 
-const clearIcon = <Icon src={ClearIcon} size={18} />
-const searchIcon = <Icon src={SearchIcon} size={18} />
+const clearIcon = <Icon src={ClearIcon} size={18} />;
+const searchIcon = <Icon src={SearchIcon} size={18} />;
 
 const SearchField = props => {
-    const { location, onChange, onFocus } = props
-    const { value } = useFieldState("search_query")
-    const formApi = useFormApi()
+    const { location, onChange, onFocus } = props;
+    const { value } = useFieldState('search_query');
+    const formApi = useFormApi();
 
     const setValue = useCallback(
         queryValue => {
             // update search field
             if (queryValue) {
-                formApi.setValue("search_query", queryValue)
+                formApi.setValue('search_query', queryValue);
             }
 
             // trigger the effects of clearing the field
-            if (typeof onChange === "function") {
-                onChange("")
+            if (typeof onChange === 'function') {
+                onChange('');
             }
         },
         [formApi, onChange]
-    )
+    );
 
-    useValueFromQuery({ location, setValue })
+    useValueFromQuery({ location, setValue });
 
-    const resetForm = useCallback(
-        () => {
-            formApi.reset()
-        },
-        [formApi]
-    )
+    const resetForm = useCallback(() => {
+        formApi.reset();
+    }, [formApi]);
 
-    const resetButton = value
-        ? <Trigger action={resetForm}>{clearIcon}</Trigger>
-        : null
+    const resetButton = value ? (
+        <Trigger action={resetForm}>{clearIcon}</Trigger>
+    ) : null;
 
     return (
         <TextInput
@@ -52,7 +49,7 @@ const SearchField = props => {
             onFocus={onFocus}
             onValueChange={onChange}
         />
-    )
-}
+    );
+};
 
-export default SearchField
+export default SearchField;
