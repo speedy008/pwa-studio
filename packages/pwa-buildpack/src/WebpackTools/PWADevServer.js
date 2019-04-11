@@ -112,34 +112,48 @@ const PWADevServer = {
                 });
             }
         };
-        const customOrigin = projectConfig.section('devServerCustomOrigin');
-        if (customOrigin.enabled) {
-            const { hostname, ports, ssl } = await configureHost(customOrigin);
-
-            devServerConfig.host = hostname;
-            devServerConfig.https = ssl;
-            // workaround for https://github.com/webpack/webpack-dev-server/issues/1491
-            devServerConfig.https.spdy = {
-                protocols: ['http/1.1']
-            };
-
-            const requestedPort = devServerEnvVars.port || ports.development;
-            if (
-                (await portscanner.checkPortStatus(requestedPort)) === 'closed'
-            ) {
-                devServerConfig.port = requestedPort;
-            } else {
+        const customOriginConfig = projectConfig.section('customOrigin');
+        if (customOriginConfig.enabled) {
+            const customOrigin = await configureHost(
+                Object.assign(customOriginConfig, {
+                    interactive: false
+                })
+            );
+            if (!customOrigin) {
                 console.warn(
                     chalk.yellowBright(
-                        '\n' +
-                            debug.errorMsg(
-                                `This project's dev server is configured to run at ${hostname}:${requestedPort}, but port ${requestedPort} is in use. The dev server will run temporarily on port ${chalk.underline.whiteBright(
-                                    devServerConfig.port
-                                )}; you may see inconsistent ServiceWorker behavior.`
-                            ) +
-                            '\n'
+                        'Custom origins are enabled for this project, but one has not yet been set up. Run `npx @magento/pwa-buildpack init-custom-origin <projectRoot>` to initialize a custom origin.'
                     )
                 );
+            } else {
+                const { hostname, ssl, ports } = customOrigin;
+                devServerConfig.host = hostname;
+                devServerConfig.https = ssl;
+                // workaround for https://github.com/webpack/webpack-dev-server/issues/1491
+                devServerConfig.https.spdy = {
+                    protocols: ['http/1.1']
+                };
+
+                const requestedPort =
+                    devServerEnvVars.port || ports.development;
+                if (
+                    (await portscanner.checkPortStatus(requestedPort)) ===
+                    'closed'
+                ) {
+                    devServerConfig.port = requestedPort;
+                } else {
+                    console.warn(
+                        chalk.yellowBright(
+                            '\n' +
+                                debug.errorMsg(
+                                    `This project's dev server is configured to run at ${hostname}:${requestedPort}, but port ${requestedPort} is in use. The dev server will run temporarily on port ${chalk.underline.whiteBright(
+                                        devServerConfig.port
+                                    )}; you may see inconsistent ServiceWorker behavior.`
+                                ) +
+                                '\n'
+                        )
+                    );
+                }
             }
         } else {
             console.warn(secureHostWarning + helpText);

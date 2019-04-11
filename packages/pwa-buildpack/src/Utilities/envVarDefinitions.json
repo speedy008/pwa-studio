@@ -6,39 +6,43 @@
                 {
                     "name": "MAGENTO_BACKEND_URL",
                     "type": "url",
-                    "desc": "Connect to an instance of Magento 2.3 by specifying its public domain name",
-                    "example": "https://magento2.vagrant65",
-                    "default": "https://release-dev-231-npzdaky-zddsyhrdimyra.us-4.magentosite.cloud/"
+                    "desc": "Connect to an instance of Magento 2.3 by specifying its public domain name.",
+                    "example": "https://release-dev-231-npzdaky-zddsyhrdimyra.us-4.magentosite.cloud/"
+                }
+            ]
+        },
+        {
+            "name": "Custom local origin",
+            "variables": [
+                {
+                    "name": "CUSTOM_ORIGIN_ENABLED",
+                    "type": "bool",
+                    "desc": "Get or create a secure, unique hostname/port combination and a trusted SSL certificate for local development.",
+                    "default": true
+                },
+                {
+                    "name": "CUSTOM_ORIGIN_ADD_UNIQUE_HASH",
+                    "type": "bool",
+                    "desc": "Add a unique hash string o the custom origin, based on filesystem location. This naturally separates domains when running multiple project folders on one developer machine.",
+                    "default": true
+                },
+                {
+                    "name": "CUSTOM_ORIGIN_SUBDOMAIN",
+                    "type": "str",
+                    "desc": "Specify the subdomain prefix of the custom origin manually, instead of using the package name.",
+                    "default": ""
+                },
+                {
+                    "name": "CUSTOM_ORIGIN_EXACT_DOMAIN",
+                    "type": "str",
+                    "desc": "Specify the exact domain of the custom origin manually.",
+                    "default": ""
                 }
             ]
         },
         {
             "name": "Development server",
             "variables": [
-                {
-                    "name": "DEV_SERVER_CUSTOM_ORIGIN_ENABLED",
-                    "type": "bool",
-                    "desc": "When the dev server starts, get or create a secure, unique hostname/port combination and a trusted SSL certificate.",
-                    "default": true
-                },
-                {
-                    "name": "DEV_SERVER_CUSTOM_ORIGIN_ADD_UNIQUE_HASH",
-                    "type": "bool",
-                    "desc": "Add a unique hash to the custom origin, based on filesystem location to the unique hostname.",
-                    "default": true
-                },
-                {
-                    "name": "DEV_SERVER_CUSTOM_ORIGIN_SUBDOMAIN",
-                    "type": "str",
-                    "desc": "Specify the subdomain prefix of the custom origin instead of using the package name",
-                    "default": ""
-                },
-                {
-                    "name": "DEV_SERVER_CUSTOM_ORIGIN_EXACT_DOMAIN",
-                    "type": "str",
-                    "desc": "Specify the subdomain prefix of the custom origin instead of using the package name",
-                    "default": ""
-                },
                 {
                     "name": "DEV_SERVER_PORT",
                     "type": "num",
@@ -108,7 +112,7 @@
                 {
                     "name": "UPWARD_JS_LOG_URL",
                     "type": "bool",
-                    "desc": "Tell the upward-js prod server to log the bound URL to stdout. Useful in testing and discovery scenarios, but may be disabled in production.",
+                    "desc": "Log the bound URL to stdout once the sever is listening. Useful in testing and discovery scenarios, but may be disabled in production.",
                     "default": true
                 }
             ]
@@ -119,7 +123,7 @@
                 {
                     "name": "CHECKOUT_BRAINTREE_TOKEN",
                     "type": "str",
-                    "desc": "Specify a Braintree API token token to direct the Venia storefront to communicate with your braintree instance. You can find this value in Braintree's Control Panel under Settings > API Keys > Tokenization Keys.",
+                    "desc": "Specify a Braintree API token token to direct the Venia storefront to communicate with your Braintree instance. You can find this value in Braintree's Control Panel under Settings > API Keys > Tokenization Keys.",
                     "default": "sandbox_8yrzsvtm_s2bg8fs563crhqzk"
                 }
             ]
@@ -128,7 +132,7 @@
     "changes": [
         {
             "name": "MAGENTO_BACKEND_URL",
-            "type": "defaultChanged",
+            "type": "exampleChanged",
             "reason": "updates to our backend cloud instances",
             "original": "https://release-dev-rxvv2iq-zddsyhrdimyra.us-4.magentosite.cloud/",
             "update": "https://release-dev-231-npzdaky-zddsyhrdimyra.us-4.magentosite.cloud/"
@@ -136,25 +140,25 @@
         {
             "name": "MAGENTO_BUILDPACK_PROVIDE_SECURE_HOST",
             "type": "renamed",
-            "update": "DEV_SERVER_CUSTOM_ORIGIN_ENABLED",
+            "update": "CUSTOM_ORIGIN_ENABLED",
             "supportLegacy": true
         },
         {
             "name": "MAGENTO_BUILDPACK_SECURE_HOST_SUBDOMAIN",
             "type": "renamed",
-            "update": "DEV_SERVER_CUSTOM_ORIGIN_SUBDOMAIN",
+            "update": "CUSTOM_ORIGIN_SUBDOMAIN",
             "supportLegacy": true
         },
         {
             "name": "MAGENTO_BUILDPACK_SECURE_HOST_EXACT_DOMAIN",
             "type": "renamed",
-            "update": "DEV_SERVER_CUSTOM_ORIGIN_EXACT_DOMAIN",
+            "update": "CUSTOM_ORIGIN_EXACT_DOMAIN",
             "supportLegacy": true
         },
         {
             "name": "MAGENTO_BUILDPACK_SECURE_HOST_ADD_UNIQUE_HASH",
             "type": "renamed",
-            "update": "DEV_SERVER_CUSTOM_ORIGIN_ADD_UNIQUE_HASH",
+            "update": "CUSTOM_ORIGIN_ADD_UNIQUE_HASH",
             "supportLegacy": true
         },
         {

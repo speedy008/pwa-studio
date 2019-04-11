@@ -215,7 +215,7 @@ async function configureWebpack(appRoot, webpackCliEnv) {
             new webpack.HotModuleReplacementPlugin(),
             new UpwardPlugin(
                 config.devServer,
-                projectEnv,
+                process.env,
                 path.resolve(appRoot, projectEnv.upwardJsUpwardPath)
             )
         );

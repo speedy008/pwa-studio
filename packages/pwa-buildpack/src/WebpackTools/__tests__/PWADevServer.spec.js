@@ -12,7 +12,7 @@ const configureHost = require('../../Utilities/configureHost');
 const { PWADevServer } = require('../');
 
 const fakeConfigSection = {
-    devServerCustomOrigin: jest.fn(() => ({}))
+    customOrigin: jest.fn(() => ({}))
     // imageService: jest.fn(),
     // magento: jest.fn()
 };
@@ -33,7 +33,7 @@ beforeEach(() => {
 
 const simulate = {
     customOriginEnabled(enabled) {
-        fakeConfigSection.devServerCustomOrigin.mockReturnValueOnce({
+        fakeConfigSection.customOrigin.mockReturnValueOnce({
             enabled
         });
         return simulate;
@@ -147,7 +147,7 @@ test('.configure() falls back to an open port if desired port is not available, 
 
 test('.configure() allows customization of provided host', async () => {
     simulate.uniqueHostProvided().portIsFree();
-    fakeConfigSection.devServerCustomOrigin.mockReturnValueOnce({
+    fakeConfigSection.customOrigin.mockReturnValueOnce({
         enabled: true,
         exactDomain: 'flippy.bird'
     });
