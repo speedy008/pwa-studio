@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { func, shape, string } from 'prop-types';
 import { useFieldState, useFormApi } from 'informed';
 import ClearIcon from 'react-feather/dist/icons/x';
 import SearchIcon from 'react-feather/dist/icons/search';
@@ -53,3 +54,11 @@ const SearchField = props => {
 };
 
 export default SearchField;
+
+SearchField.propTypes = {
+    location: shape({
+        search: string
+    }).isRequired,
+    onChange: func,
+    onFocus: func
+};

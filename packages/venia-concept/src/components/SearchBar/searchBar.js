@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { bool, func, shape, string } from 'prop-types';
 import { Form } from 'informed';
 import { useDropdown } from '@magento/peregrine';
 
@@ -63,3 +64,19 @@ const SearchBar = props => {
 };
 
 export default SearchBar;
+
+SearchBar.propTypes = {
+    classes: shape({
+        autocomplete: string,
+        container: string,
+        form: string,
+        root: string,
+        root_open: string,
+        search: string
+    }),
+    history: shape({
+        push: func.isRequired
+    }).isRequired,
+    isOpen: bool,
+    location: shape({}).isRequired
+};

@@ -1,4 +1,5 @@
 import React from 'react';
+import { arrayOf, number, shape, string } from 'prop-types';
 import { Link } from 'src/drivers';
 
 import { mergeClasses } from 'src/classify';
@@ -30,4 +31,21 @@ export default SuggestedCategories;
 
 SuggestedCategories.defaultProps = {
     limit: 4
+};
+
+SuggestedCategories.propTypes = {
+    categories: arrayOf(
+        shape({
+            label: string.isRequired,
+            value_string: string.isRequired
+        })
+    ).isRequired,
+    classes: shape({
+        item: string,
+        link: string,
+        root: string,
+        value: string
+    }),
+    limit: number.isRequired,
+    value: string
 };

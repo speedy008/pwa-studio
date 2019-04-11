@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useEffect } from 'react';
+import { bool, shape, string } from 'prop-types';
 import debounce from 'lodash.debounce';
 import { useFieldState } from 'informed';
 import { ApolloContext } from 'react-apollo/ApolloContext';
@@ -14,7 +15,6 @@ const debounceTimeout = 200;
 const Autocomplete = props => {
     const { visible } = props;
     const { data, dispatch, error, loading } = useQueryResult();
-
     const client = useContext(ApolloContext);
     const { value } = useFieldState('search_query');
     const classes = mergeClasses(defaultClasses, props.classes);
@@ -83,3 +83,13 @@ const Autocomplete = props => {
 };
 
 export default Autocomplete;
+
+Autocomplete.propTypes = {
+    classes: shape({
+        message: string,
+        root_hidden: string,
+        root_visible: string,
+        suggestions: string
+    }),
+    visible: bool
+};

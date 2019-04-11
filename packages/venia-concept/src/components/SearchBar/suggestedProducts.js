@@ -1,4 +1,5 @@
 import React from 'react';
+import { arrayOf, number, oneOfType, shape, string } from 'prop-types';
 
 import { mergeClasses } from 'src/classify';
 import mapProduct from './mapProduct';
@@ -22,4 +23,17 @@ export default SuggestedProducts;
 
 SuggestedProducts.defaultProps = {
     limit: 3
+};
+
+SuggestedProducts.propTypes = {
+    classes: shape({
+        item: string,
+        root: string
+    }),
+    limit: number.isRequired,
+    products: arrayOf(
+        shape({
+            id: oneOfType([number, string]).isRequired
+        })
+    ).isRequired
 };
