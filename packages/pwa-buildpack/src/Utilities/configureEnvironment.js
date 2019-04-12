@@ -12,10 +12,10 @@ const buildpackReleaseName = `PWA Studio Buildpack v${buildpackVersion}`;
 
 // All environment variables Buildpack and PWA Studio use should be defined in
 // envVarDefinitions.json, along with recent changes to those vars for logging.
-const { sections, changes } = require('./envVarDefinitions.json');
+const { sections, changes } = require('../../envVarDefinitions.json');
 
 /**
- * Turn the JSON entriesfrom envVarDefinitions.json, e.g.
+ * Turn the JSON entries from envVarDefinitions.json, e.g.
  *
  *     {
  *        "name": "VARNAME",

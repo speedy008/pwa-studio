@@ -44,9 +44,7 @@ async function configureWebpack(appRoot, webpackCliEnv) {
     const projectConfig = configureEnvironment(appRoot);
     const projectEnv = projectConfig.all();
 
-    const themePaths = {
-        images: path.resolve(appRoot, 'images'),
-        templates: path.resolve(appRoot, 'templates'),
+    const paths = {
         src: path.resolve(appRoot, 'src'),
         output: path.resolve(appRoot, 'dist')
     };
@@ -79,10 +77,10 @@ async function configureWebpack(appRoot, webpackCliEnv) {
         mode,
         context: appRoot, // Node global for the running script's directory
         entry: {
-            client: path.resolve(themePaths.src, 'index.js')
+            client: path.resolve(paths.src, 'index.js')
         },
         output: {
-            path: themePaths.output,
+            path: paths.output,
             publicPath: '/',
             filename: 'js/[name].js',
             strictModuleExceptionHandling: true,
@@ -100,7 +98,7 @@ async function configureWebpack(appRoot, webpackCliEnv) {
                     ]
                 },
                 {
-                    include: [themePaths.src, /peregrine\/src\//],
+                    include: [paths.src, /peregrine\/src\//],
                     test: /\.(mjs|js)$/,
                     use: [
                         {
@@ -152,7 +150,7 @@ async function configureWebpack(appRoot, webpackCliEnv) {
             new webpack.EnvironmentPlugin(projectEnv),
             new ServiceWorkerPlugin({
                 mode,
-                paths: themePaths,
+                paths: paths,
                 injectManifest: true,
                 injectManifestConfig: {
                     include: [/\.js$/],
@@ -201,7 +199,7 @@ async function configureWebpack(appRoot, webpackCliEnv) {
         config.devServer = await PWADevServer.configure({
             publicPath: config.output.publicPath,
             graphqlPlayground: {
-                queryDirs: [path.resolve(themePaths.src, 'queries')]
+                queryDirs: [path.resolve(paths.src, 'queries')]
             },
             projectConfig
         });

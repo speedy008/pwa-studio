@@ -8,7 +8,7 @@ const MAX_WIDTH = 80;
 
 // All environment variables Buildpack and PWA Studio use should be defined in
 // envVarDefinitions.json, along with recent changes to those vars for logging.
-const { sections } = require('./envVarDefinitions.json');
+const { sections } = require('../../envVarDefinitions.json');
 
 const blankline = '#\n';
 const hashes = length => Array.from({ length }, () => '#').join('');
