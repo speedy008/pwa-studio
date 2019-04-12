@@ -2,6 +2,7 @@ import * as RestApi from './RestApi';
 import * as Util from './util';
 
 //hooks
+export { useApolloContext } from './hooks/useApolloContext';
 export { useDocumentListener } from './hooks/useDocumentListener';
 export { useDropdown } from './hooks/useDropdown';
 export { useQueryResult } from './hooks/useQueryResult';

@@ -30,7 +30,7 @@ const reducer = (state, { payload, type }) => {
             return initialState;
         }
         default: {
-            throw new Error(`Received an unexpected action type: ${type}`);
+            return state;
         }
     }
 };

@@ -1,9 +1,8 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { bool, shape, string } from 'prop-types';
 import debounce from 'lodash.debounce';
 import { useFieldState } from 'informed';
-import { ApolloContext } from 'react-apollo/ApolloContext';
-import { useQueryResult } from '@magento/peregrine';
+import { useApolloContext, useQueryResult } from '@magento/peregrine';
 
 import { mergeClasses } from 'src/classify';
 import PRODUCT_SEARCH from 'src/queries/productSearch.graphql';
@@ -15,7 +14,7 @@ const debounceTimeout = 200;
 const Autocomplete = props => {
     const { visible } = props;
     const { data, dispatch, error, loading } = useQueryResult();
-    const client = useContext(ApolloContext);
+    const client = useApolloContext();
     const { value } = useFieldState('search_query');
     const classes = mergeClasses(defaultClasses, props.classes);
     const rootClassName = visible ? classes.root_visible : classes.root_hidden;
