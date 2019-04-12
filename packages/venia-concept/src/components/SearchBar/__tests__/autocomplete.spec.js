@@ -1,29 +1,30 @@
 import React from 'react';
 import { Form, Text } from 'informed';
 import { act } from 'react-test-renderer';
-import { ApolloContext } from 'react-apollo/ApolloContext';
 import waitForExpect from 'wait-for-expect';
+import { useApolloContext, useQueryResult } from '@magento/peregrine';
 
 import createTestInstance from 'src/util/createTestInstance';
 import Autocomplete from '../autocomplete';
-import useQueryResult from '../useQueryResult';
 
 jest.mock('src/classify');
+jest.mock('@magento/peregrine');
 jest.mock('../suggestions', () => () => null);
 jest.doMock('react-apollo/ApolloContext', () => React.createContext());
 
-jest.mock('../useQueryResult', () => {
-    const dispatch = jest.fn();
+const dispatch = jest.fn();
+const query = jest.fn(async () => ({}));
 
-    return jest.fn(() => ({
-        data: null,
-        dispatch,
-        error: null,
-        loading: false
-    }));
-});
+useApolloContext.mockImplementation(() => ({
+    query
+}));
 
-const { dispatch } = useQueryResult();
+useQueryResult.mockImplementation(() => ({
+    data: null,
+    dispatch,
+    error: null,
+    loading: false
+}));
 
 test('renders correctly', () => {
     const { root } = createTestInstance(
@@ -64,20 +65,17 @@ test('resets query state if input is invalid', () => {
 });
 
 test('sets loading, runs query, receives response', async () => {
-    const query = jest.fn(async () => ({}));
     let formApi;
 
     createTestInstance(
-        <ApolloContext.Provider value={{ query }}>
-            <Form
-                getApi={api => {
-                    formApi = api;
-                }}
-            >
-                <Text field="search_query" initialValue="" />
-                <Autocomplete visible={true} />
-            </Form>
-        </ApolloContext.Provider>
+        <Form
+            getApi={api => {
+                formApi = api;
+            }}
+        >
+            <Text field="search_query" initialValue="" />
+            <Autocomplete visible={true} />
+        </Form>
     );
 
     act(() => {

@@ -22,6 +22,8 @@ exports[`renders the correct tree 1`] = `
     >
       <span>
         <input
+          asyncValidate={[MockFunction]}
+          asyncValidateOnBlur={true}
           autoComplete="email"
           name="customer.email"
           onBlur={[Function]}
